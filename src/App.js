@@ -1,9 +1,11 @@
-import React from 'react';
+import React from 'react'
+import Catalog from '@/pages/Catalog'
+import ErrorBoundary from '@/containers/ErrorBoundary'
 
 const App = () => (
-  <div>
-    APPLICATION
-  </div>
-);
+  <ErrorBoundary>
+    <Catalog />
+  </ErrorBoundary>
+)
 
-export default App;
+export default App
