@@ -9,9 +9,9 @@ import theme from '@/styles/theme'
 const ProductCard = () => {
   return (
     <div>
-      <div>
+      <Thumbnail>
         <img src="https://imager-next.freetls.fastly.net/images/resized/480/a76b985a-a3a3-4321-b212-284bce616fdd" alt="Product Image"/>
-      </div>
+      </Thumbnail>
       <CardBody jc="space-between" ai="flex-start">
         <div>
           <ProductName>Zaweynia Plain Collar Mini Dress</ProductName>
@@ -52,6 +52,13 @@ const ProductStock = styled(Text)`
 const CardAction = styled(Flex)`
   > button {
     margin-left: 20px;
+  }
+`
+
+const Thumbnail = styled('div')`
+  > img {
+    max-width: 100%;
+    height: auto;
   }
 `
 

@@ -26,8 +26,16 @@ const Root = styled('button')`
           color: ${props.theme.color.black};
           border: 1px solid ${(props) => props.theme.color.grey}
         `
+    case 'inverted':
+      return css`
+        background: white;
+        color: ${props.theme.color.purple};
+        border: none;
+      `
     }
   }}
+  
+  width: ${(props) => props.block ? '100%' : 'auto'}
   
   font-family: 'Noto Sans', sans-serif;
   height: ${(props) => props.theme.controlHeight}px;
@@ -44,13 +52,15 @@ const Root = styled('button')`
 `
 
 Button.propTypes = {
-  color: PropTypes.oneOf(['primary', 'secondary']),
+  block: PropTypes.bool,
+  color: PropTypes.oneOf(['primary', 'secondary', 'inverted']),
   children: PropTypes.node.isRequired,
   className: PropTypes.string
 }
 
 Button.defaultProps = {
-  color: 'primary'
+  color: 'primary',
+  block: false
 }
 
 export default Button
