@@ -21,19 +21,20 @@ const Catalog = () => {
       <Container>
         <Card>
           <FilterOptions>
-            <Flex jc="flex-start">
-              <select>
+            <Flex jc="flex-start" ai="flex-end">
+              <select name="sort">
+                <option value="" style={{ display: 'none' }}>URUTKAN</option>
                 <option value="">Rekomendasi</option>
                 <option value="">Terbaru</option>
                 <option value="">Termurah</option>
                 <option value="">Termahal</option>
               </select>
-              <Button color="secondary" onClick={() => _toggleShowModal()}>Filter</Button>
+              <Button color="secondary" onClick={() => _toggleShowModal()}>FILTER</Button>
             </Flex>
           </FilterOptions>
           <div>
             {
-              [1,2,3].map(() => (<ProductCard />))
+              [1,2,3].map((v) => (<ProductCard key={v}/>))
             }
           </div>
         </Card>
@@ -49,6 +50,10 @@ const Main = styled('div')`
 
 const FilterOptions = styled('div')`
   padding: 15px;
+  
+  select {
+    font-weight: bold;
+  }
 `
 
 export default Catalog

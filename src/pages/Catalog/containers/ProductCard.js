@@ -10,7 +10,7 @@ const ProductCard = () => {
   return (
     <div>
       <Thumbnail>
-        <img src="https://imager-next.freetls.fastly.net/images/resized/480/a76b985a-a3a3-4321-b212-284bce616fdd" alt="Product Image"/>
+        <img src="https://imager-next.freetls.fastly.net/images/resized/480/a76b985a-a3a3-4321-b212-284bce616fdd" alt="Zaweynia Plain Collar Mini Dress"/>
       </Thumbnail>
       <CardBody jc="space-between" ai="flex-start">
         <div>
@@ -25,7 +25,7 @@ const ProductCard = () => {
         <div>
           <CardAction>
             <div>
-              <img src={require('@/assets/images/favorite_border.svg')} />
+              <img src={require('@/assets/images/favorite_border.svg')} alt="Add to Wishlist" />
             </div>
             <Button>BELI</Button>
           </CardAction>

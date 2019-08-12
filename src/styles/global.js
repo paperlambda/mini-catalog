@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
       margin: 0;
       padding: 0;
       font-family: 'Noto Sans', sans-serif;
-      background: ${theme.color.grey}
+      background: ${theme.color.darkgrey}
     }
     
     * {
@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
       font-size: 0.9rem;
       line-height: 1.2;
       
-      border: 1px solid ${theme.color.grey}
+      border: 1px solid ${theme.color.darkgrey}
       border-radius: 8px;
       background: transparent;
       color: ${theme.color.black};

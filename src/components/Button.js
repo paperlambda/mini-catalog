@@ -24,7 +24,7 @@ const Root = styled('button')`
       return css`
           background: ${props.theme.color.white};
           color: ${props.theme.color.black};
-          border: 1px solid ${(props) => props.theme.color.grey}
+          border: 1px solid ${(props) => props.theme.color.darkgrey}
         `
     case 'inverted':
       return css`

@@ -1,7 +1,7 @@
 import React from 'react'
 import Text from '@/components/Text'
 import Button from '@/components/Button'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 import Flex from '@/components/Flex'
 import PropTypes from 'prop-types'
 
@@ -42,9 +42,21 @@ const FilterModal = (props) => {
           </Options>
           <Options>
             <Text bold>Pilih warna</Text>
+            <Flex jc="flex-start">
+              <ColorPalette color="red" />
+              <ColorPalette color="green" />
+              <ColorPalette color="blue" />
+            </Flex>
           </Options>
           <Options>
             <Text bold>Pilih ukuran</Text>
+            <Flex jc="flex-start">
+              <SizeOption>S</SizeOption>
+              <SizeOption>M</SizeOption>
+              <SizeOption>L</SizeOption>
+              <SizeOption>XL</SizeOption>
+              <SizeOption>XXL</SizeOption>
+            </Flex>
           </Options>
         </ModalBody>
 
@@ -74,14 +86,26 @@ const MutedBg = styled('div')`
   z-index: 8;
 `
 
+const slide = keyframes`
+  0% {
+    right: -240px;
+  }
+  100% {
+    right: 0px;
+  }
+`
+
 const ModalContent = styled('div')`
   background: ${(props) => props.theme.color.white};
   width: 240px;
   height: 100vh;
   
+  animation: ${slide} 0.2s cubic-bezier(0.0, 0.0, 0.2, 1);;
+  animation-fill-mode: forwards;
+  
   position: fixed;
   top: 0;
-  right: 0;
+  right: -240px;
   left: auto;
   z-index: 10;
 `
@@ -92,20 +116,48 @@ const ModalHead = styled('div')`
   padding: 8px 0px;
 `
 
-const ModalBody = styled('div')`
-  
-`
+const ModalBody = styled('div')``
 
 const Options = styled('div')`
-  padding: 10px 10px;
+  padding: 10px 10px 20px;
   & + div {
-    border-top: 1px solid ${(props) => props.theme.color.grey};
+    border-top: 1px solid ${(props) => props.theme.color.darkgrey};
   }
   
   > div {
     &:first-child{
       margin-bottom: 8px;
     }
+  }
+`
+
+const ColorPalette = styled('label')`
+  background: ${(props) => props.color};
+  box-shadow: 0px 1px 2px 0px ${(props) => props.theme.color.darkgrey};
+  
+  width: 32px;
+  height: 32px;
+  border: 2px solid white;
+  border-radius: 50%;
+  
+  &::focus{
+    opactiy: 0.3;
+  }
+  
+  & + label {
+    margin-left: 8px;
+  }
+`
+
+const SizeOption = styled('label')`
+  border: 1px solid ${(props) => props.theme.color.darkgrey};
+  color: ${(props) => props.theme.color.black};
+  background: white;
+  
+  padding: 2px 8px;
+  
+  & + label {
+    margin-left: 8px;
   }
 `
 

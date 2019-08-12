@@ -1,6 +1,7 @@
 const color = {
-  purple: 'rgb(134, 22, 73)',
-  grey: '#e8e8e8',
+  purple: '#9c27b0',
+  grey: '#e0e0e0',
+  darkgrey: '#aeaeae',
   white: '#ffffff',
   black: '#2b2b2b',
 }
