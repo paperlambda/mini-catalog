@@ -24,6 +24,7 @@ module.exports = {
     'react',
   ],
   rules: {
+    'semi': ['warn', 'never'],
     'indent': ['warn', 2],
     'quotes': ['warn', 'single'],
     'react/jsx-filename-extension': 'off'
