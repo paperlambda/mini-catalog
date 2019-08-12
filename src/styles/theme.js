@@ -5,6 +5,11 @@ const color = {
   black: '#2b2b2b',
 }
 
+const navbarHeight = '55' // px
+const controlHeight = '40' // px
+
 export default {
   color,
+  navbarHeight,
+  controlHeight
 }

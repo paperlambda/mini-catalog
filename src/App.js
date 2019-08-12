@@ -1,5 +1,5 @@
 import React from 'react'
-import Catalog from '@/pages/Catalog'
+import Catalog from '@/pages/Catalog/Catalog'
 import ErrorBoundary from '@/containers/ErrorBoundary'
 
 const App = () => (

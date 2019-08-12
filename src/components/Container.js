@@ -2,19 +2,18 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Root = styled('div')`
-    max-width: 480px;
-    padding: 0px 20px;
-    margin: 0px auto;
-    
-    display: block;
-`
-
 const Container = ({ children }) => (
   <Root>
     {children}
   </Root>
 )
+
+const Root = styled('div')`
+    max-width: 480px;
+    margin: 0px auto;
+    
+    display: block;
+`
 
 Container.propTypes = {
   children: PropTypes.node.isRequired,
