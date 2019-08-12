@@ -6,7 +6,8 @@ module.exports = {
     commonjs: true
   },
   extends: [
-    'airbnb',
+    'eslint:recommended',
+    'plugin:react/recommended'
   ],
   globals: {
     Atomics: 'readonly',
@@ -23,9 +24,16 @@ module.exports = {
     'react',
   ],
   rules: {
-    "react/jsx-filename-extension": "off"
+    'indent': ['warn', 2],
+    'quotes': ['warn', 'single'],
+    'react/jsx-filename-extension': 'off'
   },
   settings: {
-    "import/resolver": "webpack"
+    'import/resolver': 'webpack',
+    'react': {
+      'createClass': 'createReactClass',
+      'pragma': 'React',
+      'version': 'detect'
+    }
   }
 };
