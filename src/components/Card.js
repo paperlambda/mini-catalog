@@ -14,7 +14,6 @@ const Card = (props) => {
 
 const Root = styled('div')`
   background: ${(props) => props.theme.color.white};
-  margin-top: 5px;
 `
 
 Card.propTypes = {

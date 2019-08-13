@@ -17,6 +17,7 @@ const CatalogDetail = (props) => {
   const { match } = props
   const [isLoading, setLoading] = React.useState(true)
   const [product, setProduct] = React.useState(null)
+  const [selectedImage, setSelectedImage] = React.useState(0)
 
   React.useEffect(() => {
     _getDetail()
@@ -36,6 +37,10 @@ const CatalogDetail = (props) => {
     }
   }
 
+  const _didSelectThumbnail = (index) => {
+    setSelectedImage(index)
+  }
+
   return (
     <Main>
       <NavigationTop isLoading={isLoading} title={product && product.name} />
@@ -47,13 +52,13 @@ const CatalogDetail = (props) => {
           <Container>
             <Card>
               <BigImage>
-                <img src={product.images[0]} />
+                <img src={product.images[selectedImage]} />
               </BigImage>
               <Thumbnail jc="flex-start">
                 <Belt>
                   {
                     product.images.map((image, index) => (
-                      <div key={index} >
+                      <div onClick={() => _didSelectThumbnail(index)} key={index} className={[selectedImage === index && 'active']}>
                         <img src={image} />
                       </div>
                     ))
@@ -108,6 +113,10 @@ const Belt = styled('div')`
     border-radius: 4px;
     padding: 4px;
     margin-right: 15px;
+    
+    &.active{
+      border-color: ${(props) => props.theme.color.purple};
+    }
   
     > img {
       width: 100%;
@@ -131,6 +140,8 @@ const Titles = styled('div')`
 
 const Variants = styled('div')`
   > div {
+    text-transform: capitalize;
+  
     & + div {
       margin-top: 8px;
     }
@@ -138,7 +149,7 @@ const Variants = styled('div')`
 `
 
 const Actions = styled(Flex)`
-  padding: 10px 20px;
+  padding: 20px 20px;
   > button {
     & + button {
       margin-left: 10px;
