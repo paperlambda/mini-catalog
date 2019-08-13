@@ -75,7 +75,7 @@ const Catalog = () => {
 
   const isBottomOf = (el) => {
     if(el) {
-      return (el.getBoundingClientRect().bottom - 200) <= window.innerHeight
+      return (el.getBoundingClientRect().bottom - 300) <= window.innerHeight
     }
     return false
   }
@@ -108,10 +108,10 @@ const Catalog = () => {
               </FilterOptions>
               <div id="list">
                 {
-                  products && products.map((product) => (<ProductCard product={product} key={product.id}/>))
+                  products && products.map((product,index) => (<ProductCard product={product} key={index}/>))
                 }
               </div>
-              { loadMore && <Flex><Text>Loading...</Text></Flex> }
+              { loadMore && <LoadMoreIndicator><Text>Loading...</Text></LoadMoreIndicator> }
             </Card>
           </Container>
         )
@@ -130,6 +130,11 @@ const FilterOptions = styled('div')`
   select {
     font-weight: bold;
   }
+`
+
+const LoadMoreIndicator = styled(Flex)`
+  padding: 15px 0px;
+  background: ${(props) => props.theme.color.grey}
 `
 
 export default Catalog
