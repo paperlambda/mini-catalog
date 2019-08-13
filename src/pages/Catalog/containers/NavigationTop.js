@@ -8,9 +8,7 @@ const NavigationTop = () => (
   <Root>
     <Container>
       <Nav jc="space-between">
-        <div>
-          <img src={require('@/assets/images/keyboard_backspace.svg')} />
-        </div>
+        <div/>
         <Text variant="title">Dress</Text>
         <div>
           <img src={require('@/assets/images/shopping_cart.svg')} />

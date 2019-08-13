@@ -5,10 +5,11 @@ import Card from '@/components/Card'
 import styled from 'styled-components'
 import Button from '@/components/Button'
 import ProductCard from './containers/ProductCard'
-import FilterModal from '@/pages/Catalog/containers/FilterModal'
+import FilterModal from './containers/FilterModal'
 import * as catalogService from '@/services/catalog-service'
 import LoadingIndicator from '@/components/LoadingIndicator'
-import NavigationTop from '@/containers/NavigationTop'
+import NavigationTop from './containers/NavigationTop'
+import history from "@/helpers/history";
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)

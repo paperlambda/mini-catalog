@@ -11,6 +11,11 @@ import PropTypes from 'prop-types'
 const ProductCard = (props) => {
   const { product } = props
   const stockWarningMin = 10
+  const [isFavorite, setFavorite] = React.useState(false)
+
+  const _toggleFavorite = () => {
+    setFavorite(!isFavorite)
+  }
 
   return (
     <div>
@@ -29,9 +34,15 @@ const ProductCard = (props) => {
         </div>
         <div>
           <CardAction>
-            <div>
-              <img src={require('@/assets/images/favorite_border.svg')} alt="Add to Wishlist" />
-            </div>
+            <FavoriteIcon>
+              {
+                isFavorite ? (
+                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite.svg')} alt="Added" />
+                ) : (
+                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite_border.svg')} alt="Add to Wishlist" />
+                )
+              }
+            </FavoriteIcon>
             <Button>BELI</Button>
           </CardAction>
 
@@ -67,6 +78,12 @@ const Thumbnail = styled('div')`
   > img {
     max-width: 100%;
     height: auto;
+  }
+`
+
+const FavoriteIcon = styled('div')`
+  > img {
+    cursor: pointer;
   }
 `
 
