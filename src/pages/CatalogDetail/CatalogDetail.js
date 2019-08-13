@@ -11,6 +11,7 @@ import theme from '@/styles/theme'
 import Button from '@/components/Button'
 import Flex from '@/components/Flex'
 import styled from 'styled-components'
+import moneyFormat from '@/helpers/money-format'
 
 const CatalogDetail = (props) => {
   const { match } = props
@@ -60,7 +61,7 @@ const CatalogDetail = (props) => {
               <Content>
                 <Titles>
                   <Text variant="title" bold>{product.name}</Text>
-                  <Text variant="title" color={theme.color.purple}>{product.price}</Text>
+                  <Text variant="title" color={theme.color.purple}>{moneyFormat(product.price)}</Text>
                 </Titles>
                 <Variants>
                   <Text>Warna : { product.colors.join(', ') }</Text>

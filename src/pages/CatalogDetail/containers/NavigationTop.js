@@ -20,7 +20,7 @@ const NavigationTop = (props) => {
 
           { !isLoading && (
               <>
-                <Text variant="title">{title}</Text>
+                <StyledTitle variant="title">{title}</StyledTitle>
                 <div>
                   <img src={require('@/assets/images/shopping_cart.svg')} />
                 </div>
@@ -48,6 +48,13 @@ const Root = styled('div')`
 const Nav = styled(Flex)`
   padding: 0px 20px;
   height: ${(props) => props.theme.navbarHeight}px;
+`
+
+const StyledTitle = styled(Text)`
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 240px;
 `
 
 NavigationTop.propTypes = {
