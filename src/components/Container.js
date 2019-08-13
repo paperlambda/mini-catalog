@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Container = ({ children }) => (
-  <Root>
+const Container = ({ children, ...props }) => (
+  <Root {...props}>
     {children}
   </Root>
 )
