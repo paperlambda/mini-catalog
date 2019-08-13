@@ -20,6 +20,18 @@ const getProducts = (params) => {
   })
 }
 
+const getProductDetail = (slug) => {
+  const db = firebase.firestore()
+  return db.collection('products').where('slug', '==' ,slug).limit(1).get().then((q) => {
+    const data = q.docs[0].data()
+    return {
+      id: q.docs[0].id,
+      ...data
+    }
+  })
+}
+
 export {
-  getProducts
+  getProducts,
+  getProductDetail
 }

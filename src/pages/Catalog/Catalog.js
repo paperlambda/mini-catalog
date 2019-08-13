@@ -9,7 +9,7 @@ import FilterModal from './containers/FilterModal'
 import * as catalogService from '@/services/catalog-service'
 import LoadingIndicator from '@/components/LoadingIndicator'
 import NavigationTop from './containers/NavigationTop'
-import history from "@/helpers/history";
+import Main from '@/components/Main'
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)
@@ -79,10 +79,6 @@ const Catalog = () => {
     </Main>
   )
 }
-
-const Main = styled('div')`
-  padding-top: ${(props) => props.theme.navbarHeight}px;
-`
 
 const FilterOptions = styled('div')`
   padding: 15px;

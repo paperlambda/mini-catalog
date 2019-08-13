@@ -6,6 +6,6 @@ export const ProductType = {
   images: PropTypes.array.isRequired,
   slug: PropTypes.string.isRequired,
   stock: PropTypes.number.isRequired,
-  color: PropTypes.array.isRequired,
+  colors: PropTypes.array.isRequired,
   sizes: PropTypes.array.isRequired
 }
