@@ -50,13 +50,15 @@ const CatalogDetail = (props) => {
                 <img src={product.images[0]} />
               </BigImage>
               <Thumbnail jc="flex-start">
-                {
-                  product.images.map((image, index) => (
-                    <div key={index} >
-                      <img src={image} />
-                    </div>
-                  ))
-                }
+                <Belt>
+                  {
+                    product.images.map((image, index) => (
+                      <div key={index} >
+                        <img src={image} />
+                      </div>
+                    ))
+                  }
+                </Belt>
               </Thumbnail>
               <Content>
                 <Titles>
@@ -87,20 +89,26 @@ const BigImage = styled('div')`
   }
 `
 
-const Thumbnail = styled(Flex)`
+const Thumbnail = styled('div')`
   padding: 5px 20px 10px 20px;
+  width: 100vw;
+  overflow-x: auto;
+`
+
+const Belt = styled('div')`
+  width: 100%;
+  white-space: nowrap;
+  
   > div {
+    display: inline-block;
     width: 56px;
     height: 56px;
   
     border: 1px solid ${(props) => props.theme.color.grey}
     border-radius: 4px;
     padding: 4px;
+    margin-right: 15px;
   
-    & + div {
-      margin-left: 10px;
-    }
-    
     > img {
       width: 100%;
       height: 100%;
