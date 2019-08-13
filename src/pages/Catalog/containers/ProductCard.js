@@ -7,6 +7,7 @@ import Label from '@/components/Label'
 import theme from '@/styles/theme'
 import {ProductType} from '@/constants/propTypes'
 import PropTypes from 'prop-types'
+import {Link} from "react-router-dom";
 
 const ProductCard = (props) => {
   const { product } = props
@@ -18,7 +19,7 @@ const ProductCard = (props) => {
   }
 
   return (
-    <div>
+    <Link to={`/catalogs/${product.slug}`}>
       <Thumbnail>
         <img src={product.images[0]} alt={product.name}/>
       </Thumbnail>
@@ -51,7 +52,7 @@ const ProductCard = (props) => {
           )}
         </div>
       </CardBody>
-    </div>
+    </Link>
   )
 }
 

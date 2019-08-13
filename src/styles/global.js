@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
       box-sizing: border-box;
     }
     
+    a{
+      text-decoration: none;
+    }
+    
     
     input, select{
       font-family: 'Noto Sans', sans-serif;
