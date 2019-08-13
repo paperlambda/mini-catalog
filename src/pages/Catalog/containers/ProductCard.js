@@ -5,22 +5,27 @@ import Button from '@/components/Button'
 import styled from 'styled-components'
 import Label from '@/components/Label'
 import theme from '@/styles/theme'
+import {ProductType} from '@/constants/propTypes'
+import PropTypes from 'prop-types'
 
-const ProductCard = () => {
+const ProductCard = (props) => {
+  const { product } = props
+  const stockWarningMin = 10
+
   return (
     <div>
       <Thumbnail>
-        <img src="https://imager-next.freetls.fastly.net/images/resized/480/a76b985a-a3a3-4321-b212-284bce616fdd" alt="Zaweynia Plain Collar Mini Dress"/>
+        <img src={product.images[0]} alt={product.name}/>
       </Thumbnail>
       <CardBody jc="space-between" ai="flex-start">
         <div>
-          <ProductName>Zaweynia Plain Collar Mini Dress</ProductName>
+          <ProductName>{product.name}</ProductName>
           <Label>
             <Text variant="caption">
-              M, L, XL
+              {product.sizes.join(', ')}
             </Text>
           </Label>
-          <Text variant="title-sm" bold={true}>169.000</Text>
+          <Text variant="title-sm" bold={true}>{product.price}</Text>
         </div>
         <div>
           <CardAction>
@@ -29,7 +34,10 @@ const ProductCard = () => {
             </div>
             <Button>BELI</Button>
           </CardAction>
-          <ProductStock variant="caption" color={theme.color.purple}>Stok tinggal 3</ProductStock>
+
+          { product.stock <= stockWarningMin && (
+            <ProductStock variant="caption" color={theme.color.purple}>Stok tinggal {product.stock}</ProductStock>
+          )}
         </div>
       </CardBody>
     </div>
@@ -61,5 +69,9 @@ const Thumbnail = styled('div')`
     height: auto;
   }
 `
+
+ProductCard.propTypes = {
+  product: PropTypes.shape(ProductType)
+}
 
 export default ProductCard

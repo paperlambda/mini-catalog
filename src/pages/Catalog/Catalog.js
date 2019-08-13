@@ -1,5 +1,4 @@
 import React from 'react'
-import NavigationTop from '@/containers/NavigationTop'
 import Container from '@/components/Container'
 import Flex from '@/components/Flex'
 import Card from '@/components/Card'
@@ -7,24 +6,50 @@ import styled from 'styled-components'
 import Button from '@/components/Button'
 import ProductCard from './containers/ProductCard'
 import FilterModal from '@/pages/Catalog/containers/FilterModal'
+import * as catalogService from '@/services/catalog-service'
+import LoadingIndicator from '@/components/LoadingIndicator'
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)
+  const [products, setProducts] = React.useState(null)
+  const [isLoading, setLoading] = React.useState(false)
+
+  React.useEffect(() => {
+    _getProducts()
+  }, [])
 
   const _toggleShowModal = () => {
     setFilterModal(!showFilterModal)
   }
 
+  const _getProducts = async () => {
+    try {
+      setLoading(true)
+      const data = await catalogService.getProducts()
+      setProducts(data)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Main>
+        <LoadingIndicator/>
+      </Main>
+    )
+  }
+
   return (
     <Main>
-      <NavigationTop />
       <Container>
         <Card>
           <FilterOptions>
             <Flex jc="flex-start" ai="flex-end">
               <select name="sort">
                 <option value="" style={{ display: 'none' }}>URUTKAN</option>
-                <option value="">Rekomendasi</option>
                 <option value="">Terbaru</option>
                 <option value="">Termurah</option>
                 <option value="">Termahal</option>
@@ -34,7 +59,7 @@ const Catalog = () => {
           </FilterOptions>
           <div>
             {
-              [1,2,3].map((v) => (<ProductCard key={v}/>))
+              products && products.map((product) => (<ProductCard product={product} key={product}/>))
             }
           </div>
         </Card>

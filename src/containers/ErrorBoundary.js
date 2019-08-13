@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Flex from "@/components/Flex";
+import styled from "styled-components";
+import Text from "@/components/Text";
 
 class ErrorBoundary extends React.Component {
   constructor(props){
@@ -19,13 +22,22 @@ class ErrorBoundary extends React.Component {
 
     if (hasError) {
       return (
-        <h1>Something went wrong</h1>
+        <Root>
+          <Text variant="title-sm">Something went wrong!</Text>
+          <Text>Please contact developer <a href="javascript:void(0)">dev@tech</a></Text>
+        </Root>
       )
     }
 
     return children
   }
 }
+
+const Root = styled(Flex)`
+  width: 100%;
+  height: 100vh;
+  background: white;
+`
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired

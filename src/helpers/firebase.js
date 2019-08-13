@@ -1,4 +1,5 @@
-import { app } from 'firebase'
+import * as firebase from 'firebase/app'
+import 'firebase/firestore'
 
 const config = {
   apiKey: 'AIzaSyCYOdShMlb5WpO4dDrwptOYHcIAMW1JQ6c',
@@ -10,10 +11,6 @@ const config = {
   appId: '1:732926879523:web:0e3055a1154bdf3f',
 }
 
-class Firebase {
-  constructor() {
-    app.initializeApp(config)
-  }
-}
+firebase.initializeApp(config)
 
-export default Firebase
+export default firebase
