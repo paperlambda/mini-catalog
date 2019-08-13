@@ -1,8 +1,15 @@
 import firebase from '@/helpers/firebase'
 
-const getProducts = () => {
+const getProducts = (params) => {
   const db = firebase.firestore()
-  return db.collection('products').get().then((q) => {
+  let products = db.collection('products')
+
+  if (params.sort) {
+    const [sortBy, sortDirection = 'asc'] = params.sort
+    products = products.orderBy(sortBy, sortDirection)
+  }
+
+  return products.get().then((q) => {
     return q.docs.map((doc) => {
       const data = doc.data()
       return {

@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Flex from "@/components/Flex";
-import styled from "styled-components";
-import Text from "@/components/Text";
+import Flex from '@/components/Flex'
+import styled from 'styled-components'
+import Text from '@/components/Text'
 
 class ErrorBoundary extends React.Component {
   constructor(props){
@@ -23,8 +23,10 @@ class ErrorBoundary extends React.Component {
     if (hasError) {
       return (
         <Root>
-          <Text variant="title-sm">Something went wrong!</Text>
-          <Text>Please contact developer <a href="javascript:void(0)">dev@tech</a></Text>
+          <div>
+            <Text variant="title-sm">Something went wrong!</Text>
+            <Text>Please contact developer <a href="javascript:void(0)">dev@tech</a></Text>
+          </div>
         </Root>
       )
     }

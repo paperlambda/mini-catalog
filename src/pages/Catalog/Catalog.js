@@ -13,19 +13,28 @@ const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)
   const [products, setProducts] = React.useState(null)
   const [isLoading, setLoading] = React.useState(false)
+  const [sortBy, setSortBy] = React.useState('created|desc')
 
   React.useEffect(() => {
     _getProducts()
-  }, [])
+  }, [sortBy])
 
   const _toggleShowModal = () => {
     setFilterModal(!showFilterModal)
   }
 
+  const _didSelectSortOpt = (e) => {
+    const sortOpt = e.target.value
+    setSortBy(sortOpt)
+  }
+
   const _getProducts = async () => {
     try {
       setLoading(true)
-      const data = await catalogService.getProducts()
+
+      const sortParams = sortBy.split('|')
+      const data = await catalogService.getProducts({ sort: sortParams })
+
       setProducts(data)
     } catch (e) {
       console.error(e)
@@ -48,18 +57,18 @@ const Catalog = () => {
         <Card>
           <FilterOptions>
             <Flex jc="flex-start" ai="flex-end">
-              <select name="sort">
+              <select value={sortBy} onChange={(e) => _didSelectSortOpt(e)} name="sort">
                 <option value="" style={{ display: 'none' }}>URUTKAN</option>
-                <option value="">Terbaru</option>
-                <option value="">Termurah</option>
-                <option value="">Termahal</option>
+                <option value="created|desc">Terbaru</option>
+                <option value="price|asc">Termurah</option>
+                <option value="price|desc">Termahal</option>
               </select>
               <Button color="secondary" onClick={() => _toggleShowModal()}>FILTER</Button>
             </Flex>
           </FilterOptions>
           <div>
             {
-              products && products.map((product) => (<ProductCard product={product} key={product}/>))
+              products && products.map((product) => (<ProductCard product={product} key={product.id}/>))
             }
           </div>
         </Card>
