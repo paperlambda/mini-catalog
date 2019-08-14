@@ -5,7 +5,7 @@ import FilterModal from './containers/FilterModal'
 import * as catalogService from '@/services/catalog-service'
 import NavigationTop from './containers/NavigationTop'
 import FlatList from './containers/FlatList'
-import { Button, Card, Container, Flex, LoadingIndicator, Main, Text} from "@/components";
+import { Button, Card, Container, Flex, LoadingIndicator, Main, Text} from '@/components'
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)
@@ -28,6 +28,7 @@ const Catalog = () => {
   const _didSelectSortOpt = (e) => {
     const sortOpt = e.target.value
     setSortBy(sortOpt)
+    setLastPage(false)
   }
 
   const _getProducts = async () => {
@@ -50,7 +51,7 @@ const Catalog = () => {
     if(lastPage){
       document.removeEventListener('scroll', fallback)
     }
-    if(!loadMore) {
+    if(!lastPage && !loadMore) {
       _willLoadMore()
     }
   }
