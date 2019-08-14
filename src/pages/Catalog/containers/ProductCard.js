@@ -88,6 +88,7 @@ const CardAction = styled(Flex)`
 `
 
 const Thumbnail = styled('div')`
+  height: 480px;
   > img {
     max-width: 100%;
     height: auto;
