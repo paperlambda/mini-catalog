@@ -20,15 +20,19 @@ const ProductCard = (props) => {
   }
 
   return (
-    <Link to={`/catalogs/${product.slug}`}>
-      <Thumbnail>
-        <img src={product.images[0]} alt={product.name}/>
+    <div>
+      <Thumbnail title={product.name}>
+        <Link to={`/catalogs/${product.slug}`}>
+          <img src={product.images[0]} alt={product.name}/>
+        </Link>
       </Thumbnail>
       <CardBody jc="space-between" ai="flex-start">
         <div>
-          <ProductName>{product.name}</ProductName>
+          <Link to={`/catalogs/${product.slug}`}>
+            <ProductName>{product.name}</ProductName>
+          </Link>
           <Label>
-            <Text variant="caption">
+            <Text title="Size" variant="caption">
               { product.sizes.join(', ') }
             </Text>
           </Label>
@@ -39,9 +43,9 @@ const ProductCard = (props) => {
             <FavoriteIcon>
               {
                 isFavorite ? (
-                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite.svg')} alt="Added" />
+                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite.svg')} title="Added" />
                 ) : (
-                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite_border.svg')} alt="Add to Wishlist" />
+                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite_border.svg')} title="Add to Wishlist" />
                 )
               }
             </FavoriteIcon>
@@ -53,7 +57,7 @@ const ProductCard = (props) => {
           )}
         </div>
       </CardBody>
-    </Link>
+    </div>
   )
 }
 
