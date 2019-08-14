@@ -1,21 +1,10 @@
-import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-const Flex = (props) => {
-  const { children } = props
-
-  return (
-    <Root {...props}>
-      {children}
-    </Root>
-  )
-}
-
-const Root = styled('div')`
+const Flex = styled('div')`
   display: flex;
   justify-content: ${(props) => props.jc};
-  align-items: ${(props) => props.ai}
+  align-items: ${(props) => props.ai || 'center'}
 `
 
 Flex.propTypes = {

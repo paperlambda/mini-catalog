@@ -1,17 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import styled, {css} from 'styled-components'
+import PropTypes from "prop-types";
 
-const Button = (props) => {
-  const { children } = props
-  return (
-    <Root {...props}>
-      { children }
-    </Root>
-  )
-}
-
-const Root = styled('button')`
+const Button = styled('button')`
   ${(props) => {
     switch (props.color) {
     case 'primary':
@@ -30,6 +20,12 @@ const Root = styled('button')`
       return css`
         background: white;
         color: ${props.theme.color.purple};
+        border: none;
+      `
+    default:
+      return css`
+        background: ${props.theme.color.purple};
+        color: white;
         border: none;
       `
     }
@@ -54,8 +50,6 @@ const Root = styled('button')`
 Button.propTypes = {
   block: PropTypes.bool,
   color: PropTypes.oneOf(['primary', 'secondary', 'inverted']),
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string
 }
 
 Button.defaultProps = {

@@ -1,18 +1,8 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import theme from '@/styles/theme'
 import styled, {css} from 'styled-components'
 
-const Text = (props) => {
-  const { children } = props
-  return (
-    <Root {...props}>
-      { children }
-    </Root>
-  )
-}
-
-const Root = styled('div')`
+const Text = styled('div')`
   color: ${(props) => props.color};
   font-weight: ${(props) => props.bold ? 'bold' : 'normal'}
   
@@ -43,8 +33,7 @@ const Root = styled('div')`
 Text.propTypes = {
   variant: PropTypes.oneOf(['title', 'title-sm', 'paragraph', 'caption']),
   color: PropTypes.string,
-  bold: PropTypes.bool,
-  children: PropTypes.node.isRequired
+  bold: PropTypes.bool
 }
 
 Text.defaultProps = {
