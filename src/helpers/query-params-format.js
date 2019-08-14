@@ -18,10 +18,15 @@ const decodeQueryParams = urlstr => {
     .split('?')[1]
     .split('&')
     .map(kv => kv.split('='))
-    .reduce(
-      (obj, [key, value]) => ({ ...obj, [key]: decodeURIComponent(value) }),
-      {}
-    )
+    .reduce((obj, [key, value]) => {
+      let dValue = decodeURIComponent(value)
+
+      // Test if comma delimited string
+      if (/%2C/.test(String(value))) {
+        dValue = dValue.split(',')
+      }
+      return { ...obj, [key]: dValue }
+    }, {})
 }
 
 export { decodeQueryParams, encodeQueryParams }

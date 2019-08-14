@@ -47,6 +47,7 @@ class Catalog extends React.Component {
       this.setState({ lastPage: false })
     }
     if (filters !== prevState.filters) {
+      this.setState({ lastPage: false })
       this._getProducts(filters)
     }
   }
@@ -73,7 +74,6 @@ class Catalog extends React.Component {
     const { filters } = this.state
     if (location.search) {
       const q = decodeQueryParams(location.search)
-      console.log(q)
       this.setState({
         filters: q,
         sortBy: `${q.sort}|${q.order}`
@@ -89,7 +89,6 @@ class Catalog extends React.Component {
       history.push({
         search: `?${encodeQueryParams(filters)}`
       })
-
       const { data, next } = await catalogService.getProducts(filters)
 
       this.setState({

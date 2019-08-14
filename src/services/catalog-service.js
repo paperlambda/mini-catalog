@@ -20,7 +20,9 @@ const getProducts = (params, query = null) => {
       colors.forEach(color => {
         products = products.where(`colors.${color}`, '==', true)
       })
-    } else {
+    }
+
+    if (typeof colors === 'string') {
       products = products.where(`colors.${colors}`, '==', true)
     }
   }
@@ -30,7 +32,8 @@ const getProducts = (params, query = null) => {
       sizes.forEach(size => {
         products = products.where(`sizes.${size}`, '==', true)
       })
-    } else {
+    }
+    if (typeof sizes === 'string') {
       products = products.where(`sizes.${sizes}`, '==', true)
     }
   }
@@ -51,7 +54,6 @@ const getProducts = (params, query = null) => {
 
     const lastDoc = q.docs[q.docs.length - 1]
     const next = products.startAfter(lastDoc).limit(2)
-    console.log(next)
 
     return {
       data: q.docs.map(doc => {
