@@ -11,6 +11,7 @@ import LoadingIndicator from '@/components/LoadingIndicator'
 import NavigationTop from './containers/NavigationTop'
 import Main from '@/components/Main'
 import Text from '@/components/Text'
+import FlatList from './containers/FlatList'
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)
@@ -19,13 +20,8 @@ const Catalog = () => {
   const [sortBy, setSortBy] = React.useState('created|desc')
   const [loadMore, setLoadMore] = React.useState(false)
   const [filters, setFilters] = React.useState(null)
-
-  React.useEffect(() => {
-    if(products){
-      document.addEventListener('scroll', didScroll)
-    }
-    return () => document.removeEventListener('scroll', didScroll)
-  }, [products])
+  const [nextQuery, setNextQuery] = React.useState(null)
+  const [lastPage, setLastPage] = React.useState(false)
 
   React.useEffect(() => {
     _getProducts()
@@ -45,8 +41,9 @@ const Catalog = () => {
       setLoading(true)
 
       const sortParams = sortBy.split('|')
-      const data = await catalogService.getProducts({ sort: sortParams, filters })
+      const { data, next } = await catalogService.getProducts({ sort: sortParams, filters })
 
+      setNextQuery(next)
       setProducts(data)
     } catch (e) {
       console.error(e)
@@ -55,37 +52,32 @@ const Catalog = () => {
     }
   }
 
+  const didScrollList = (fallback) => {
+    if(lastPage){
+      document.removeEventListener('scroll', fallback)
+    }
+    if(!loadMore) {
+      _willLoadMore()
+    }
+  }
+
   const _willLoadMore = async () => {
     try {
       setLoadMore(true)
       const sortParams = sortBy.split('|')
-      const data = await catalogService.getProducts({ sort: sortParams })
-      if (products) {
-        setProducts([...products, ...data])
+      const { data, next } = await catalogService.getProducts({ sort: sortParams, filters }, nextQuery)
+
+      if(data === null){
+        setLastPage(true)
       } else {
-        setProducts(data)
+        setProducts([...products, ...data])
+        setNextQuery(next)
       }
-      document.addEventListener('scroll', didScroll)
 
     } catch (e) {
       console.error(e)
     } finally {
       setLoadMore(false)
-    }
-  }
-
-  const isBottomOf = (el) => {
-    if(el) {
-      return (el.getBoundingClientRect().bottom - 300) <= window.innerHeight
-    }
-    return false
-  }
-
-  const didScroll = () => {
-    const wrappedElement = document.getElementById('list')
-    if (isBottomOf(wrappedElement)) {
-      // _willLoadMore()
-      document.removeEventListener('scroll', didScroll)
     }
   }
 
@@ -107,12 +99,15 @@ const Catalog = () => {
                   <Button color="secondary" onClick={() => _toggleShowModal()}>FILTER</Button>
                 </Flex>
               </FilterOptions>
-              <div id="list">
-                {
-                  products && products.map((product,index) => (<ProductCard product={product} key={index}/>))
-                }
-              </div>
+              <FlatList didReachThreshold={(fallback) => didScrollList(fallback)}>
+                <div id="list">
+                  {
+                    products && products.map((product,index) => (<ProductCard product={product} key={index}/>))
+                  }
+                </div>
+              </FlatList>
               { loadMore && <LoadMoreIndicator><Text>Loading...</Text></LoadMoreIndicator> }
+              { lastPage && <LoadMoreIndicator><Text>End of list</Text></LoadMoreIndicator> }
             </Card>
           </Container>
         )

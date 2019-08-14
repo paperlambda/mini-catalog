@@ -1,13 +1,12 @@
 import firebase from '@/helpers/firebase'
 import sortSize from '@/helpers/sort-size'
 
-const getProducts = (params) => {
+const getProducts = (params, query = null) => {
   const db = firebase.firestore()
   let products = db.collection('products')
 
   // Sorts
   const [sortBy, sortDirection = 'asc'] = params.sort
-  console.log(params.filters, params.sort)
   if(sortBy === 'price' || params.filters && params.filters.price) {
     products = products.orderBy('price', sortDirection)
   }
@@ -36,16 +35,32 @@ const getProducts = (params) => {
     }
   }
 
-  return products.get().then((q) => {
-    return q.docs.map((doc) => {
-      const data = doc.data()
+  const current = query ? query : products.limit(2)
+
+  return current.get().then((q) => {
+
+    if (q.empty) {
       return {
-        ...data,
-        id: doc.id,
-        sizes: sortSize(Object.keys(data.sizes)),
-        colors: Object.keys(data.colors)
+        data: null,
+        next: null
       }
-    })
+    }
+
+    const lastDoc = q.docs[q.docs.length-1]
+    const next = products.startAfter(lastDoc).limit(2)
+
+    return {
+      data: q.docs.map((doc) => {
+        const data = doc.data()
+        return {
+          ...data,
+          id: doc.id,
+          sizes: sortSize(Object.keys(data.sizes)),
+          colors: Object.keys(data.colors)
+        }
+      }),
+      next
+    }
   })
 }
 
