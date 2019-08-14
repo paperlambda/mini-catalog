@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-class FlatList extends React.Component{
+class FlatList extends React.Component {
   constructor(props) {
     super(props)
     this.isBottomOf = this.isBottomOf.bind(this)
@@ -17,8 +17,8 @@ class FlatList extends React.Component{
   }
 
   isBottomOf(el) {
-    if(el) {
-      return (el.getBoundingClientRect().bottom - 300) <= window.innerHeight
+    if (el) {
+      return el.getBoundingClientRect().bottom - 300 <= window.innerHeight
     }
     return false
   }
@@ -33,15 +33,11 @@ class FlatList extends React.Component{
 
   render() {
     const { children } = this.props
-    return (
-      <>
-        { children }
-      </>
-    )
+    return <>{children}</>
   }
 }
 
-FlatList.propTypes =  {
+FlatList.propTypes = {
   children: PropTypes.node.isRequired,
   didReachThreshold: PropTypes.func.isRequired
 }

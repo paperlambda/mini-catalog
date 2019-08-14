@@ -6,7 +6,9 @@ import Flex from '@/components/Flex'
 const LoadingIndicator = () => {
   return (
     <Root>
-      <Text variant="title-sm" bold>LOADING...</Text>
+      <Text variant="title-sm" bold>
+        LOADING...
+      </Text>
     </Root>
   )
 }

@@ -10,8 +10,8 @@ const App = () => (
   <ErrorBoundary>
     <Router history={history}>
       <Switch>
-        <Route exact path="/catalogs" component={Catalog}/>
-        <Route exact path="/catalogs/:slug" component={CatalogDetail}/>
+        <Route exact path="/catalogs" component={Catalog} />
+        <Route exact path="/catalogs/:slug" component={CatalogDetail} />
         <Route component={Catalog} />
       </Switch>
     </Router>

@@ -8,7 +8,7 @@ const config = {
   projectId: 'sorabel-ta',
   storageBucket: 'sorabel-ta.appspot.com',
   messagingSenderId: '732926879523',
-  appId: '1:732926879523:web:0e3055a1154bdf3f',
+  appId: '1:732926879523:web:0e3055a1154bdf3f'
 }
 
 firebase.initializeApp(config)

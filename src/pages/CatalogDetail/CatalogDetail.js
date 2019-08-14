@@ -5,9 +5,17 @@ import PropTypes from 'prop-types'
 import theme from '@/styles/theme'
 import styled from 'styled-components'
 import moneyFormat from '@/helpers/money-format'
-import { Button, Card, Container, Flex, LoadingIndicator, Main, Text} from "@/components";
+import {
+  Button,
+  Card,
+  Container,
+  Flex,
+  LoadingIndicator,
+  Main,
+  Text
+} from '@/components'
 
-const CatalogDetail = (props) => {
+const CatalogDetail = props => {
   const { match } = props
   const [isLoading, setLoading] = React.useState(true)
   const [product, setProduct] = React.useState(null)
@@ -23,7 +31,6 @@ const CatalogDetail = (props) => {
 
       const data = await catalogService.getProductDetail(match.params.slug)
       setProduct(data)
-
     } catch (e) {
       console.error(e)
     } finally {
@@ -31,52 +38,54 @@ const CatalogDetail = (props) => {
     }
   }
 
-  const _didSelectThumbnail = (index) => {
+  const _didSelectThumbnail = index => {
     setSelectedImage(index)
   }
 
   return (
     <Main>
       <NavigationTop isLoading={isLoading} title={product && product.name} />
-      {
-        isLoading && <LoadingIndicator/>
-      }
-      {
-        !isLoading && (
-          <Container>
-            <Card>
-              <BigImage>
-                <img src={product.images[selectedImage]} />
-              </BigImage>
-              <Thumbnail jc="flex-start">
-                <Belt>
-                  {
-                    product.images.map((image, index) => (
-                      <div onClick={() => _didSelectThumbnail(index)} key={index} className={[selectedImage === index && 'active']}>
-                        <img src={image} />
-                      </div>
-                    ))
-                  }
-                </Belt>
-              </Thumbnail>
-              <Content>
-                <Titles>
-                  <Text variant="title" bold>{product.name}</Text>
-                  <Text variant="title" color={theme.color.purple}>{moneyFormat(product.price)}</Text>
-                </Titles>
-                <Variants>
-                  <Text>Warna : { product.colors.join(', ') }</Text>
-                  <Text>Ukuran : { product.sizes.join(', ') }</Text>
-                </Variants>
-              </Content>
-              <Actions jc="space-between">
-                <Button color="secondary">Simpan</Button>
-                <Button block>Beli Sekarang</Button>
-              </Actions>
-            </Card>
-          </Container>
-        )
-      }
+      {isLoading && <LoadingIndicator />}
+      {!isLoading && (
+        <Container>
+          <Card>
+            <BigImage>
+              <img src={product.images[selectedImage]} />
+            </BigImage>
+            <Thumbnail jc="flex-start">
+              <Belt>
+                {product.images.map((image, index) => (
+                  <div
+                    onClick={() => _didSelectThumbnail(index)}
+                    key={index}
+                    className={[selectedImage === index && 'active']}
+                  >
+                    <img src={image} />
+                  </div>
+                ))}
+              </Belt>
+            </Thumbnail>
+            <Content>
+              <Titles>
+                <Text variant="title" bold>
+                  {product.name}
+                </Text>
+                <Text variant="title" color={theme.color.purple}>
+                  {moneyFormat(product.price)}
+                </Text>
+              </Titles>
+              <Variants>
+                <Text>Warna : {product.colors.join(', ')}</Text>
+                <Text>Ukuran : {product.sizes.join(', ')}</Text>
+              </Variants>
+            </Content>
+            <Actions jc="space-between">
+              <Button color="secondary">Simpan</Button>
+              <Button block>Beli Sekarang</Button>
+            </Actions>
+          </Card>
+        </Container>
+      )}
     </Main>
   )
 }
@@ -103,13 +112,13 @@ const Belt = styled('div')`
     width: 56px;
     height: 56px;
   
-    border: 1px solid ${(props) => props.theme.color.grey}
+    border: 1px solid ${props => props.theme.color.grey}
     border-radius: 4px;
     padding: 4px;
     margin-right: 15px;
     
     &.active{
-      border-color: ${(props) => props.theme.color.purple};
+      border-color: ${props => props.theme.color.purple};
     }
   
     > img {
@@ -120,10 +129,10 @@ const Belt = styled('div')`
 `
 
 const Content = styled('div')`
- > div {
+  > div {
     padding: 15px 20px;
-    border-bottom: 1px solid ${(props) => props.theme.color.grey}
- } 
+    border-bottom: 1px solid ${props => props.theme.color.grey};
+  }
 `
 
 const Titles = styled('div')`
@@ -135,7 +144,7 @@ const Titles = styled('div')`
 const Variants = styled('div')`
   > div {
     text-transform: capitalize;
-  
+
     & + div {
       margin-top: 8px;
     }

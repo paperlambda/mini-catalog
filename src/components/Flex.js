@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 const Flex = styled('div')`
   display: flex;
-  justify-content: ${(props) => props.jc};
-  align-items: ${(props) => props.ai || 'center'}
+  justify-content: ${props => props.jc};
+  align-items: ${props => props.ai || 'center'};
 `
 
 Flex.propTypes = {
@@ -16,7 +16,7 @@ Flex.propTypes = {
 
 Flex.defaultProps = {
   jc: 'center',
-  ai: 'center',
+  ai: 'center'
 }
 
 export default Flex

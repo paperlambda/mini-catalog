@@ -1,23 +1,23 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { Flex, Text } from "@/components";
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { Flex, Text } from '@/components'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       hasError: false
-    };
+    }
   }
 
   static getDerivedStateFromError() {
-    return { hasError: true };
+    return { hasError: true }
   }
 
   render() {
-    const { hasError } = this.state;
-    const { children } = this.props;
+    const { hasError } = this.state
+    const { children } = this.props
 
     if (hasError) {
       return (
@@ -32,10 +32,10 @@ class ErrorBoundary extends React.Component {
             </Text>
           </div>
         </Root>
-      );
+      )
     }
 
-    return children;
+    return children
   }
 }
 
@@ -43,10 +43,10 @@ const Root = styled(Flex)`
   width: 100%;
   height: 100vh;
   background: white;
-`;
+`
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired
-};
+}
 
-export default ErrorBoundary;
+export default ErrorBoundary

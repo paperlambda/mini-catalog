@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import theme from '@/styles/theme'
-import {ProductType} from '@/constants/propTypes'
+import { ProductType } from '@/constants/propTypes'
 import PropTypes from 'prop-types'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import moneyFormat from '@/helpers/money-format'
 import { Button, Flex, Label, Text } from '@/components'
 
-const ProductCard = (props) => {
+const ProductCard = props => {
   const { product } = props
   const stockWarningMin = 10
   const [isFavorite, setFavorite] = React.useState(false)
@@ -20,7 +20,7 @@ const ProductCard = (props) => {
     <div>
       <Thumbnail title={product.name}>
         <Link to={`/catalogs/${product.slug}`}>
-          <img src={product.images[0]} alt={product.name}/>
+          <img src={product.images[0]} alt={product.name} />
         </Link>
       </Thumbnail>
       <CardBody jc="space-between" ai="flex-start">
@@ -30,27 +30,37 @@ const ProductCard = (props) => {
           </Link>
           <Label>
             <Text title="Size" variant="caption">
-              { product.sizes.join(', ') }
+              {product.sizes.join(', ')}
             </Text>
           </Label>
-          <Text variant="title-sm" bold={true}>{moneyFormat(product.price)}</Text>
+          <Text variant="title-sm" bold={true}>
+            {moneyFormat(product.price)}
+          </Text>
         </div>
         <div>
           <CardAction>
             <FavoriteIcon>
-              {
-                isFavorite ? (
-                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite.svg')} title="Added" />
-                ) : (
-                  <img onClick={() => _toggleFavorite()} src={require('@/assets/images/favorite_border.svg')} title="Add to Wishlist" />
-                )
-              }
+              {isFavorite ? (
+                <img
+                  onClick={() => _toggleFavorite()}
+                  src={require('@/assets/images/favorite.svg')}
+                  title="Added"
+                />
+              ) : (
+                <img
+                  onClick={() => _toggleFavorite()}
+                  src={require('@/assets/images/favorite_border.svg')}
+                  title="Add to Wishlist"
+                />
+              )}
             </FavoriteIcon>
             <Button>BELI</Button>
           </CardAction>
 
-          { product.stock <= stockWarningMin && (
-            <ProductStock variant="caption" color={theme.color.purple}>Stok tinggal {product.stock}</ProductStock>
+          {product.stock <= stockWarningMin && (
+            <ProductStock variant="caption" color={theme.color.purple}>
+              Stok tinggal {product.stock}
+            </ProductStock>
           )}
         </div>
       </CardBody>

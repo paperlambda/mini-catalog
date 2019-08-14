@@ -3,7 +3,7 @@ const color = {
   grey: '#e0e0e0',
   darkgrey: '#aeaeae',
   white: '#ffffff',
-  black: '#2b2b2b',
+  black: '#2b2b2b'
 }
 
 const navbarHeight = '55' // px
