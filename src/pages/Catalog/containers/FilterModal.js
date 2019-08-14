@@ -39,6 +39,14 @@ const FilterModal = (props) => {
     }
   }
 
+  const resetFilter = () => {
+    setColors(colors.map((c) => ({ ...c, active: false })))
+    setSizes(sizes.map((s) => ({ ...s, active: false })))
+    setPriceRange('')
+
+    setFilter()
+  }
+
   const setFilter = () => {
     const filters = {
       sizes: sizes.filter((s) => s.active === true).map((s) => s.key),
@@ -101,10 +109,10 @@ const FilterModal = (props) => {
             <Text bold>Rentang Harga</Text>
             <select onChange={(e) => setPriceRange(e.target.value)} value={priceRange}>
               <option value="">Semua Harga</option>
-              <option value="<50">Di bawah 50 ribu</option>
-              <option value="50-100">50 - 100 ribu</option>
-              <option value="100-200">100 - 200 ribu</option>
-              <option value="200>">Di atas 200 ribu</option>
+              <option value="<50000">Di bawah 50 ribu</option>
+              <option value="50000-100000">50 - 100 ribu</option>
+              <option value="100000-200000">100 - 200 ribu</option>
+              <option value=">200000>">Di atas 200 ribu</option>
             </select>
           </Options>
           <Options>
@@ -128,7 +136,7 @@ const FilterModal = (props) => {
         </ModalBody>
 
         <ModalFoot jc="space-between">
-          <Button color="inverted" block>RESET</Button>
+          <Button onClick={() => resetFilter()} color="inverted" block>RESET</Button>
           <Button onClick={() => setFilter()} block>FILTER</Button>
         </ModalFoot>
       </ModalContent>

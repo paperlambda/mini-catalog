@@ -84,7 +84,7 @@ const Catalog = () => {
   const didScroll = () => {
     const wrappedElement = document.getElementById('list')
     if (isBottomOf(wrappedElement)) {
-      _willLoadMore(true)
+      // _willLoadMore()
       document.removeEventListener('scroll', didScroll)
     }
   }
