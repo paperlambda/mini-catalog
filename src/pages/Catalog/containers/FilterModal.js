@@ -1,10 +1,8 @@
 import React from 'react'
-import Text from '@/components/Text'
-import Button from '@/components/Button'
 import styled, {keyframes} from 'styled-components'
-import Flex from '@/components/Flex'
 import PropTypes from 'prop-types'
 import * as catalogService from '@/services/catalog-service'
+import { Button, Flex, Text } from '@/components'
 
 const FilterModal = (props) => {
   const { willClose, willFilter } = props

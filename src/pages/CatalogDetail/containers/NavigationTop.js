@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Container from '@/components/Container'
-import Flex from '@/components/Flex'
-import Text from '@/components/Text'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Container, Flex, Text } from "@/components";
 
 const NavigationTop = (props) => {
   const { title, isLoading } = props

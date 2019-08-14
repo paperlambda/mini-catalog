@@ -1,14 +1,11 @@
 import React from 'react'
-import Flex from '@/components/Flex'
-import Text from '@/components/Text'
-import Button from '@/components/Button'
 import styled from 'styled-components'
-import Label from '@/components/Label'
 import theme from '@/styles/theme'
 import {ProductType} from '@/constants/propTypes'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import moneyFormat from '@/helpers/money-format'
+import { Button, Flex, Label, Text } from '@/components'
 
 const ProductCard = (props) => {
   const { product } = props

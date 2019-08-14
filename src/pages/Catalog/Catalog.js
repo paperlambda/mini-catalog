@@ -1,17 +1,11 @@
 import React from 'react'
-import Container from '@/components/Container'
-import Flex from '@/components/Flex'
-import Card from '@/components/Card'
 import styled from 'styled-components'
-import Button from '@/components/Button'
 import ProductCard from './containers/ProductCard'
 import FilterModal from './containers/FilterModal'
 import * as catalogService from '@/services/catalog-service'
-import LoadingIndicator from '@/components/LoadingIndicator'
 import NavigationTop from './containers/NavigationTop'
-import Main from '@/components/Main'
-import Text from '@/components/Text'
 import FlatList from './containers/FlatList'
+import { Button, Card, Container, Flex, LoadingIndicator, Main, Text} from "@/components";
 
 const Catalog = () => {
   const [showFilterModal, setFilterModal] = React.useState(false)

@@ -2,16 +2,10 @@ import React from 'react'
 import NavigationTop from './containers/NavigationTop'
 import * as catalogService from '@/services/catalog-service'
 import PropTypes from 'prop-types'
-import LoadingIndicator from '@/components/LoadingIndicator'
-import Container from '@/components/Container'
-import Main from '@/components/Main'
-import Card from '@/components/Card'
-import Text from '@/components/Text'
 import theme from '@/styles/theme'
-import Button from '@/components/Button'
-import Flex from '@/components/Flex'
 import styled from 'styled-components'
 import moneyFormat from '@/helpers/money-format'
+import { Button, Card, Container, Flex, LoadingIndicator, Main, Text} from "@/components";
 
 const CatalogDetail = (props) => {
   const { match } = props

@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Flex from '@/components/Flex'
 import styled from 'styled-components'
-import Text from '@/components/Text'
+import { Flex, Text } from "@/components";
 
 class ErrorBoundary extends React.Component {
   constructor(props){
