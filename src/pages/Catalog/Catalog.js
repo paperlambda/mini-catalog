@@ -45,6 +45,8 @@ class Catalog extends React.Component {
     const { sortBy, filters } = this.state
     if (sortBy !== prevState.sortBy) {
       this.setState({ lastPage: false })
+    }
+    if (filters !== prevState.filters) {
       this._getProducts(filters)
     }
   }
@@ -71,6 +73,7 @@ class Catalog extends React.Component {
     const { filters } = this.state
     if (location.search) {
       const q = decodeQueryParams(location.search)
+      console.log(q)
       this.setState({
         filters: q,
         sortBy: `${q.sort}|${q.order}`
@@ -83,7 +86,6 @@ class Catalog extends React.Component {
   async _getProducts(filters) {
     try {
       this.setState({ isLoading: true })
-
       history.push({
         search: `?${encodeQueryParams(filters)}`
       })
@@ -140,12 +142,13 @@ class Catalog extends React.Component {
 
   setFilters(filters) {
     this.setState(prev => {
-      return { filters: { ...prev.filters, filters } }
+      return { filters: { ...prev.filters, ...filters } }
     })
   }
 
   render() {
     const {
+      filters,
       isLoading,
       lastPage,
       loadMore,
@@ -153,6 +156,7 @@ class Catalog extends React.Component {
       showFilterModal,
       sortBy
     } = this.state
+
     return (
       <Main>
         <NavigationTop />
@@ -207,6 +211,7 @@ class Catalog extends React.Component {
         {isLoading && <LoadingIndicator />}
         {showFilterModal && (
           <FilterModal
+            filters={filters}
             willFilter={params => this.setFilters(params)}
             willClose={() => this._toggleShowModal()}
           />

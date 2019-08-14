@@ -2,38 +2,33 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 import * as catalogService from '@/services/catalog-service'
-import { Button, Flex, Text } from '@/components'
+import { Button, Flex, Text, LoadingIndicator } from '@/components'
 
 const FilterModal = props => {
   const { willClose, willFilter } = props
   const [priceRange, setPriceRange] = React.useState('')
   const [colors, setColors] = React.useState(null)
   const [sizes, setSizes] = React.useState(null)
+  const [isLoading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    _getColors()
-    _getSizes()
+    _getResources()
     _lockBodyScroll()
     return () => _unlockBodyScroll()
   }, [])
 
-  const _getColors = async () => {
+  const _getResources = async () => {
     try {
-      const data = await catalogService.getColors()
-      const addActiveToggle = data.map(d => ({ ...d, active: false }))
-      setColors(addActiveToggle)
-    } catch (e) {
-      console.error(e)
-    }
-  }
+      setLoading(true)
+      const sizeData = await catalogService.getSizes()
+      setSizes(sizeData.map(d => ({ ...d, active: false })))
 
-  const _getSizes = async () => {
-    try {
-      const data = await catalogService.getSizes()
-      const addActiveToggle = data.map(d => ({ ...d, active: false }))
-      setSizes(addActiveToggle)
+      const colorData = await catalogService.getColors()
+      setColors(colorData.map(d => ({ ...d, active: false })))
     } catch (e) {
       console.error(e)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -47,8 +42,8 @@ const FilterModal = props => {
 
   const setFilter = () => {
     const filters = {
-      sizes: sizes.filter(s => s.active === true).map(s => s.key),
-      colors: colors.filter(c => c.active === true).map(c => c.code),
+      sizes: sizes.filter(s => s.active === true).map(s => s.key) || null,
+      colors: colors.filter(c => c.active === true).map(c => c.code) || null,
       price: priceRange
     }
 
@@ -101,52 +96,54 @@ const FilterModal = props => {
         <ModalHead>
           <Text variant="title-sm">Filter</Text>
         </ModalHead>
-
-        <ModalBody>
-          <Options>
-            <Text bold>Rentang Harga</Text>
-            <select
-              onChange={e => setPriceRange(e.target.value)}
-              value={priceRange}
-            >
-              <option value="">Semua Harga</option>
-              <option value="<50000">Di bawah 50 ribu</option>
-              <option value="50000-100000">50 - 100 ribu</option>
-              <option value="100000-200000">100 - 200 ribu</option>
-              <option value=">200000>">Di atas 200 ribu</option>
-            </select>
-          </Options>
-          <Options>
-            <Text bold>Pilih warna</Text>
-            <Flex jc="flex-start">
-              {colors &&
-                colors.map((color, index) => (
-                  <ColorPalette
-                    className={[color.active && 'active']}
-                    onClick={() => _toggleColor(color.id)}
-                    title={color.label}
-                    key={index}
-                    color={color.code}
-                  />
-                ))}
-            </Flex>
-          </Options>
-          <Options>
-            <Text bold>Pilih ukuran</Text>
-            <SizeList jc="flex-start">
-              {sizes &&
-                sizes.map((size, index) => (
-                  <SizeOption
-                    className={[size.active && 'active']}
-                    onClick={() => _toggleSize(size.key)}
-                    key={index}
-                  >
-                    {size.key}
-                  </SizeOption>
-                ))}
-            </SizeList>
-          </Options>
-        </ModalBody>
+        {isLoading && <LoadingIndicator />}
+        {!isLoading && (
+          <ModalBody>
+            <Options>
+              <Text bold>Rentang Harga</Text>
+              <select
+                onChange={e => setPriceRange(e.target.value)}
+                value={priceRange}
+              >
+                <option value="">Semua Harga</option>
+                <option value="<50000">Di bawah 50 ribu</option>
+                <option value="50000-100000">50 - 100 ribu</option>
+                <option value="100000-200000">100 - 200 ribu</option>
+                <option value=">200000>">Di atas 200 ribu</option>
+              </select>
+            </Options>
+            <Options>
+              <Text bold>Pilih warna</Text>
+              <Flex jc="flex-start">
+                {colors &&
+                  colors.map((color, index) => (
+                    <ColorPalette
+                      className={[color.active && 'active']}
+                      onClick={() => _toggleColor(color.id)}
+                      title={color.label}
+                      key={index}
+                      color={color.code}
+                    />
+                  ))}
+              </Flex>
+            </Options>
+            <Options>
+              <Text bold>Pilih ukuran</Text>
+              <SizeList jc="flex-start">
+                {sizes &&
+                  sizes.map((size, index) => (
+                    <SizeOption
+                      className={[size.active && 'active']}
+                      onClick={() => _toggleSize(size.key)}
+                      key={index}
+                    >
+                      {size.key}
+                    </SizeOption>
+                  ))}
+              </SizeList>
+            </Options>
+          </ModalBody>
+        )}
 
         <ModalFoot jc="space-between">
           <Button onClick={() => resetFilter()} color="inverted" block>
@@ -279,6 +276,7 @@ const ModalFoot = styled(Flex)`
 `
 
 FilterModal.propTypes = {
+  filters: PropTypes.object.isRequired,
   willClose: PropTypes.func.isRequired,
   willFilter: PropTypes.func.isRequired
 }

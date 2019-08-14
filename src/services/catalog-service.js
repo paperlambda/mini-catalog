@@ -15,19 +15,27 @@ const getProducts = (params, query = null) => {
   }
 
   // Filters
-  if (colors && colors.length > 0) {
-    colors.forEach(color => {
-      products = products.where(`colors.${color}`, '==', true)
-    })
+  if (colors && colors !== '') {
+    if (Array.isArray(colors) && colors.length > 0) {
+      colors.forEach(color => {
+        products = products.where(`colors.${color}`, '==', true)
+      })
+    } else {
+      products = products.where(`colors.${colors}`, '==', true)
+    }
   }
 
-  if (sizes && sizes.length > 0) {
-    sizes.forEach(size => {
-      products = products.where(`sizes.${size}`, '==', true)
-    })
+  if (sizes && sizes !== '') {
+    if (Array.isArray(sizes) && sizes.length > 0) {
+      sizes.forEach(size => {
+        products = products.where(`sizes.${size}`, '==', true)
+      })
+    } else {
+      products = products.where(`sizes.${sizes}`, '==', true)
+    }
   }
 
-  if (price) {
+  if (price && price !== '') {
     products = getPriceRangeQuery(products, price)
   }
 
