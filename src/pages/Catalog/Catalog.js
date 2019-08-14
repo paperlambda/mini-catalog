@@ -145,6 +145,15 @@ class Catalog extends React.Component {
     })
   }
 
+  willReset() {
+    history.push({
+      search: ''
+    })
+    this.setState({
+      filters: {}
+    })
+  }
+
   render() {
     const {
       filters,
@@ -211,6 +220,7 @@ class Catalog extends React.Component {
         {showFilterModal && (
           <FilterModal
             filters={filters}
+            willReset={() => this.willReset()}
             willFilter={params => this.setFilters(params)}
             willClose={() => this._toggleShowModal()}
           />

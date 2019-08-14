@@ -5,7 +5,7 @@ import * as catalogService from '@/services/catalog-service'
 import { Button, Flex, Text, LoadingIndicator } from '@/components'
 
 const FilterModal = props => {
-  const { willClose, willFilter } = props
+  const { willClose, willFilter, willReset } = props
   const [priceRange, setPriceRange] = React.useState('')
   const [colors, setColors] = React.useState(null)
   const [sizes, setSizes] = React.useState(null)
@@ -19,12 +19,13 @@ const FilterModal = props => {
 
   const _getResources = async () => {
     try {
+      const { filters } = props
       setLoading(true)
       const sizeData = await catalogService.getSizes()
-      setSizes(sizeData.map(d => ({ ...d, active: false })))
+      setSizes(setActiveOptions(sizeData, 'key', filters.sizes))
 
       const colorData = await catalogService.getColors()
-      setColors(colorData.map(d => ({ ...d, active: false })))
+      setColors(setActiveOptions(colorData, 'code', filters.colors))
     } catch (e) {
       console.error(e)
     } finally {
@@ -32,15 +33,36 @@ const FilterModal = props => {
     }
   }
 
+  const setActiveOptions = (options, fieldName, activeFilter) => {
+    if (fieldName) {
+      const flatArr = [activeFilter].flat(1)
+      const activateOptions = options.map(c => {
+        if (flatArr.indexOf(c[fieldName]) !== -1) {
+          return { ...c, active: true }
+        }
+        return { ...c, active: false }
+      })
+      return activateOptions
+    }
+    return options
+  }
+
   const resetFilter = () => {
     setColors(colors.map(c => ({ ...c, active: false })))
     setSizes(sizes.map(s => ({ ...s, active: false })))
     setPriceRange('')
 
-    setFilter()
+    willReset()
+    willClose()
   }
 
-  const setFilter = () => {
+  const sendFilter = (reset = false) => {
+    if (reset) {
+      willFilter({}, true)
+      willClose()
+      return
+    }
+
     const filters = {
       sizes: sizes.filter(s => s.active === true).map(s => s.key) || null,
       colors: colors.filter(c => c.active === true).map(c => c.code) || null,
@@ -149,7 +171,7 @@ const FilterModal = props => {
           <Button onClick={() => resetFilter()} color="inverted" block>
             RESET
           </Button>
-          <Button onClick={() => setFilter()} block>
+          <Button onClick={() => sendFilter()} block>
             FILTER
           </Button>
         </ModalFoot>
@@ -278,7 +300,8 @@ const ModalFoot = styled(Flex)`
 FilterModal.propTypes = {
   filters: PropTypes.object.isRequired,
   willClose: PropTypes.func.isRequired,
-  willFilter: PropTypes.func.isRequired
+  willFilter: PropTypes.func.isRequired,
+  willReset: PropTypes.func.isRequired
 }
 
 export default FilterModal
