@@ -25,7 +25,12 @@ class ErrorBoundary extends React.Component {
         <Root>
           <div>
             <Text variant="title-sm">Something went wrong!</Text>
-            <Text>Please contact developer <a href="javascript:void(0)">dev@tech</a></Text>
+            <Text>Please contact developer <a>dev@tech</a></Text>
+            <Text>
+              <a href="/">
+                Back to Home
+              </a>
+            </Text>
           </div>
         </Root>
       )

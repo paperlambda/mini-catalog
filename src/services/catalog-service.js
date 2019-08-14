@@ -1,23 +1,64 @@
 import firebase from '@/helpers/firebase'
+import sortSize from '@/helpers/sort-size'
 
 const getProducts = (params) => {
   const db = firebase.firestore()
   let products = db.collection('products')
+
+  if (params.filters) {
+    const { colors, sizes, price } = params.filters
+
+    if (colors && colors.length > 0) {
+      colors.forEach((color) => {
+        products = products.where('colors', 'array-contains', color)
+      })
+    }
+
+    if (sizes && sizes.length > 0) {
+      sizes.forEach((size) => {
+        products = products.where('sizes', 'array-contains', size)
+      })
+    }
+
+    if (price) {
+      products = products.orderBy('price')
+      products = getPriceRangeQuery(products,price)
+    }
+  }
 
   if (params.sort) {
     const [sortBy, sortDirection = 'asc'] = params.sort
     products = products.orderBy(sortBy, sortDirection)
   }
 
+
+
   return products.get().then((q) => {
     return q.docs.map((doc) => {
       const data = doc.data()
       return {
+        ...data,
         id: doc.id,
-        ...data
+        sizes: sortSize(Object.keys(data.sizes)),
+        colors: Object.keys(data.colors)
       }
     })
   })
+}
+
+const getPriceRangeQuery = (ref, params) => {
+  const lessThan = /^</.test(params)
+  const moreThan = /^>/.test(params)
+  const between = /\d-\d/.test(params)
+  if (lessThan) {
+    return ref.where('price', '<', params.split('<')[1])
+  }
+  if (moreThan) {
+    return ref.where('price', '>', params.split('>')[1])
+  }
+  if (between) {
+    return ref.where('price', '>', params.split('>')[0]).where('price','<', params.split('<')[2])
+  }
 }
 
 const getProductDetail = (slug) => {
@@ -25,9 +66,37 @@ const getProductDetail = (slug) => {
   return db.collection('products').where('slug', '==' ,slug).limit(1).get().then((q) => {
     const data = q.docs[0].data()
     return {
+      ...data,
       id: q.docs[0].id,
-      ...data
+      sizes: sortSize(Object.keys(data.sizes)),
+      colors: Object.keys(data.colors)
     }
+  })
+}
+
+const getColors = () => {
+  const db = firebase.firestore()
+  return db.collection('colors').get().then((q) => {
+    return q.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        ...data,
+        id: doc.id
+      }
+    })
+  })
+}
+
+const getSizes = () => {
+  const db = firebase.firestore()
+  return db.collection('sizes').orderBy('order').get().then((q) => {
+    return q.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        ...data,
+        id: doc.id
+      }
+    })
   })
 }
 
@@ -78,5 +147,7 @@ const _addMockData = () => {
 
 export {
   getProducts,
-  getProductDetail
+  getProductDetail,
+  getColors,
+  getSizes
 }

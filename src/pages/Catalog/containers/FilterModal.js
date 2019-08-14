@@ -4,14 +4,81 @@ import Button from '@/components/Button'
 import styled, {keyframes} from 'styled-components'
 import Flex from '@/components/Flex'
 import PropTypes from 'prop-types'
+import * as catalogService from '@/services/catalog-service'
 
 const FilterModal = (props) => {
-  const { willClose } = props
+  const { willClose, willFilter } = props
+  const [priceRange, setPriceRange] = React.useState('')
+  const [colors, setColors] = React.useState(null)
+  const [sizes, setSizes] = React.useState(null)
 
   React.useEffect(() => {
+    _getColors()
+    _getSizes()
     _lockBodyScroll()
     return () => _unlockBodyScroll()
   }, [])
+
+  const _getColors = async () => {
+    try {
+      const data = await catalogService.getColors()
+      const addActiveToggle = data.map((d) => ({...d, active: false}))
+      setColors(addActiveToggle)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const _getSizes = async () => {
+    try {
+      const data = await catalogService.getSizes()
+      const addActiveToggle = data.map((d) => ({...d, active: false}))
+      setSizes(addActiveToggle)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const setFilter = () => {
+    const filters = {
+      sizes: sizes.filter((s) => s.active === true).map((s) => s.key),
+      colors: colors.filter((c) => c.active === true).map((c) => c.code),
+      price: priceRange
+    }
+
+    willFilter(filters)
+    willClose()
+  }
+
+  const _toggleSize = (key) => {
+    const findAndToggle = sizes.map((size) => {
+      if (size.key === key) {
+        return {
+          ...size,
+          active: !size.active
+        }
+      }
+
+      return size
+    })
+
+    setSizes(findAndToggle)
+  }
+
+  const _toggleColor = (id) => {
+    const findAndToggle = colors.map((color) => {
+      if (color.id === id) {
+        return {
+          ...color,
+          active: !color.active
+        }
+      }
+
+      return color
+    })
+
+    setColors(findAndToggle)
+  }
 
   const _lockBodyScroll = () => {
     document.body.style.overflow = 'hidden'
@@ -32,37 +99,37 @@ const FilterModal = (props) => {
         <ModalBody>
           <Options>
             <Text bold>Rentang Harga</Text>
-            <select>
+            <select onChange={(e) => setPriceRange(e.target.value)} value={priceRange}>
               <option value="">Semua Harga</option>
-              <option value="">Di bawah 50 ribu</option>
-              <option value="">50 - 100 ribu</option>
-              <option value="">100 - 200 ribu</option>
-              <option value="">Di atas 200 ribu</option>
+              <option value="<50">Di bawah 50 ribu</option>
+              <option value="50-100">50 - 100 ribu</option>
+              <option value="100-200">100 - 200 ribu</option>
+              <option value="200>">Di atas 200 ribu</option>
             </select>
           </Options>
           <Options>
             <Text bold>Pilih warna</Text>
             <Flex jc="flex-start">
-              <ColorPalette color="red" />
-              <ColorPalette color="green" />
-              <ColorPalette color="blue" />
+              {
+                colors && colors.map((color, index) =>
+                  <ColorPalette className={[color.active && 'active']} onClick={() => _toggleColor(color.id)} title={color.label} key={index} color={color.code} />)
+              }
             </Flex>
           </Options>
           <Options>
             <Text bold>Pilih ukuran</Text>
-            <Flex jc="flex-start">
-              <SizeOption>S</SizeOption>
-              <SizeOption>M</SizeOption>
-              <SizeOption>L</SizeOption>
-              <SizeOption>XL</SizeOption>
-              <SizeOption>XXL</SizeOption>
-            </Flex>
+            <SizeList jc="flex-start">
+              {
+                sizes && sizes.map((size, index) =>
+                  <SizeOption className={[size.active && 'active']} onClick={() => _toggleSize(size.key)} key={index}>{size.key}</SizeOption>)
+              }
+            </SizeList>
           </Options>
         </ModalBody>
 
         <ModalFoot jc="space-between">
-          <Button color="inverted" block>Reset</Button>
-          <Button block>Filter</Button>
+          <Button color="inverted" block>RESET</Button>
+          <Button onClick={() => setFilter()} block>FILTER</Button>
         </ModalFoot>
       </ModalContent>
     </Modal>
@@ -132,6 +199,7 @@ const Options = styled('div')`
 `
 
 const ColorPalette = styled('label')`
+  cursor: pointer;
   background: ${(props) => props.color};
   box-shadow: 0px 1px 2px 0px ${(props) => props.theme.color.darkgrey};
   
@@ -139,25 +207,36 @@ const ColorPalette = styled('label')`
   height: 32px;
   border: 2px solid white;
   border-radius: 50%;
+  margin-right: 8px;
   
-  &::focus{
-    opactiy: 0.3;
-  }
-  
-  & + label {
-    margin-left: 8px;
+  &.active{
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    color: white;
+    
+    &:before{
+      content: "\\2713";
+    }
   }
 `
 
+const SizeList = styled(Flex)`
+  flex-wrap: wrap;
+`
+
 const SizeOption = styled('label')`
+  cursor: pointer;
   border: 1px solid ${(props) => props.theme.color.darkgrey};
   color: ${(props) => props.theme.color.black};
   background: white;
   
   padding: 2px 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
   
-  & + label {
-    margin-left: 8px;
+  &.active{
+    background: ${(props) => props.theme.color.grey};
   }
 `
 
@@ -175,7 +254,8 @@ const ModalFoot = styled(Flex)`
 `
 
 FilterModal.propTypes = {
-  willClose: PropTypes.func.isRequired
+  willClose: PropTypes.func.isRequired,
+  willFilter: PropTypes.func.isRequired
 }
 
 export default FilterModal

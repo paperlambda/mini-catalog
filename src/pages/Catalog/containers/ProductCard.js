@@ -8,7 +8,7 @@ import theme from '@/styles/theme'
 import {ProductType} from '@/constants/propTypes'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
-import moneyFormat from "@/helpers/money-format";
+import moneyFormat from '@/helpers/money-format'
 
 const ProductCard = (props) => {
   const { product } = props
@@ -29,7 +29,7 @@ const ProductCard = (props) => {
           <ProductName>{product.name}</ProductName>
           <Label>
             <Text variant="caption">
-              {product.sizes.join(', ')}
+              { product.sizes.join(', ') }
             </Text>
           </Label>
           <Text variant="title-sm" bold={true}>{moneyFormat(product.price)}</Text>

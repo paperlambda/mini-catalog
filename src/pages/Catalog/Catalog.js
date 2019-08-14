@@ -18,6 +18,7 @@ const Catalog = () => {
   const [isLoading, setLoading] = React.useState(false)
   const [sortBy, setSortBy] = React.useState('created|desc')
   const [loadMore, setLoadMore] = React.useState(false)
+  const [filters, setFilters] = React.useState(null)
 
   React.useEffect(() => {
     if(products){
@@ -28,7 +29,7 @@ const Catalog = () => {
 
   React.useEffect(() => {
     _getProducts()
-  }, [sortBy])
+  }, [sortBy, filters])
 
   const _toggleShowModal = () => {
     setFilterModal(!showFilterModal)
@@ -44,7 +45,7 @@ const Catalog = () => {
       setLoading(true)
 
       const sortParams = sortBy.split('|')
-      const data = await catalogService.getProducts({ sort: sortParams })
+      const data = await catalogService.getProducts({ sort: sortParams, filters })
 
       setProducts(data)
     } catch (e) {
@@ -116,10 +117,8 @@ const Catalog = () => {
           </Container>
         )
       }
-      {
-        isLoading && <LoadingIndicator/>
-      }
-      { showFilterModal && (<FilterModal willClose={() => _toggleShowModal()}/>) }
+      { isLoading && <LoadingIndicator/> }
+      { showFilterModal && (<FilterModal willFilter={(params) => setFilters(params)} willClose={() => _toggleShowModal()}/>) }
     </Main>
   )
 }
