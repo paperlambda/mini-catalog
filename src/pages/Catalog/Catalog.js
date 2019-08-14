@@ -14,136 +14,206 @@ import {
   Main,
   Text
 } from '@/components'
+import history from '@/helpers/history'
+import {
+  decodeQueryParams,
+  encodeQueryParams
+} from '@/helpers/query-params-format'
+import PropTypes from 'prop-types'
 
-const Catalog = () => {
-  const [showFilterModal, setFilterModal] = React.useState(false)
-  const [products, setProducts] = React.useState(null)
-  const [isLoading, setLoading] = React.useState(false)
-  const [sortBy, setSortBy] = React.useState('created|desc')
-  const [loadMore, setLoadMore] = React.useState(false)
-  const [filters, setFilters] = React.useState(null)
-  const [nextQuery, setNextQuery] = React.useState(null)
-  const [lastPage, setLastPage] = React.useState(false)
-
-  React.useEffect(() => {
-    _getProducts()
-  }, [sortBy, filters])
-
-  const _toggleShowModal = () => {
-    setFilterModal(!showFilterModal)
-  }
-
-  const _didSelectSortOpt = e => {
-    const sortOpt = e.target.value
-    setSortBy(sortOpt)
-    setLastPage(false)
-  }
-
-  const _getProducts = async () => {
-    try {
-      setLoading(true)
-
-      const sortParams = sortBy.split('|')
-      const { data, next } = await catalogService.getProducts({
-        sort: sortParams,
-        filters
-      })
-
-      setNextQuery(next)
-      setProducts(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
+class Catalog extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showFilterModal: false,
+      products: null,
+      isLoading: false,
+      sortBy: false,
+      loadMore: false,
+      filters: {},
+      nextQuery: null,
+      lastPage: false
     }
   }
 
-  const didScrollList = fallback => {
+  componentDidMount() {
+    const queryParams = this._getQueryParams()
+    this._getProducts(queryParams)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { sortBy, filters } = this.state
+    if (sortBy !== prevState.sortBy) {
+      this.setState({ lastPage: false })
+      this._getProducts(filters)
+    }
+  }
+
+  _toggleShowModal() {
+    this.setState(prev => {
+      return { showFilterModal: !prev.showFilterModal }
+    })
+  }
+
+  _didSelectSortOpt(e) {
+    const sortOpt = e.target.value
+    this.setState(prev => {
+      const [sort, order] = sortOpt.split('|')
+      return {
+        sortBy: sortOpt,
+        filters: { ...prev.filters, sort, order }
+      }
+    })
+  }
+
+  _getQueryParams() {
+    const { location } = this.props
+    const { filters } = this.state
+    if (location.search) {
+      const q = decodeQueryParams(location.search)
+      this.setState({
+        filters: q,
+        sortBy: `${q.sort}|${q.order}`
+      })
+      return q
+    }
+    return filters
+  }
+
+  async _getProducts(filters) {
+    try {
+      this.setState({ isLoading: true })
+
+      history.push({
+        search: `?${encodeQueryParams(filters)}`
+      })
+
+      const { data, next } = await catalogService.getProducts(filters)
+
+      this.setState({
+        nextQuery: next,
+        products: data
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      this.setState({ isLoading: false })
+    }
+  }
+
+  didScrollList(fallback) {
+    const { lastPage, loadMore } = this.state
     if (lastPage) {
       document.removeEventListener('scroll', fallback)
     }
     if (!lastPage && !loadMore) {
-      _willLoadMore()
+      this._willLoadMore()
     }
   }
 
-  const _willLoadMore = async () => {
+  async _willLoadMore() {
     try {
-      setLoadMore(true)
-      const sortParams = sortBy.split('|')
+      const { filters, nextQuery } = this.state
+      this.setState({ loadMore: true })
+
       const { data, next } = await catalogService.getProducts(
-        { sort: sortParams, filters },
+        filters,
         nextQuery
       )
 
       if (data === null) {
-        setLastPage(true)
+        this.setState({ lastPage: true })
       } else {
-        setProducts([...products, ...data])
-        setNextQuery(next)
+        this.setState(prev => {
+          return {
+            products: [...prev.products, ...data],
+            nextQuery: next
+          }
+        })
       }
     } catch (e) {
       console.error(e)
     } finally {
-      setLoadMore(false)
+      this.setState({ loadMore: false })
     }
   }
 
-  return (
-    <Main>
-      <NavigationTop />
-      {!isLoading && (
-        <Container>
-          <Card>
-            <FilterOptions>
-              <Flex jc="flex-start" ai="flex-end">
-                <select
-                  value={sortBy}
-                  onChange={e => _didSelectSortOpt(e)}
-                  name="sort"
-                >
-                  <option value="" style={{ display: 'none' }}>
-                    URUTKAN
-                  </option>
-                  <option value="created|desc">Terbaru</option>
-                  <option value="price|asc">Termurah</option>
-                  <option value="price|desc">Termahal</option>
-                </select>
-                <Button color="secondary" onClick={() => _toggleShowModal()}>
-                  FILTER
-                </Button>
-              </Flex>
-            </FilterOptions>
-            <FlatList didReachThreshold={fallback => didScrollList(fallback)}>
-              <div id="list">
-                {products &&
-                  products.map((product, index) => (
-                    <ProductCard product={product} key={index} />
-                  ))}
-              </div>
-            </FlatList>
-            {loadMore && (
-              <LoadMoreIndicator>
-                <Text>Loading...</Text>
-              </LoadMoreIndicator>
-            )}
-            {lastPage && (
-              <LoadMoreIndicator>
-                <Text>End of list</Text>
-              </LoadMoreIndicator>
-            )}
-          </Card>
-        </Container>
-      )}
-      {isLoading && <LoadingIndicator />}
-      {showFilterModal && (
-        <FilterModal
-          willFilter={params => setFilters(params)}
-          willClose={() => _toggleShowModal()}
-        />
-      )}
-    </Main>
-  )
+  setFilters(filters) {
+    this.setState(prev => {
+      return { filters: { ...prev.filters, filters } }
+    })
+  }
+
+  render() {
+    const {
+      isLoading,
+      lastPage,
+      loadMore,
+      products,
+      showFilterModal,
+      sortBy
+    } = this.state
+    return (
+      <Main>
+        <NavigationTop />
+        {!isLoading && (
+          <Container>
+            <Card>
+              <FilterOptions>
+                <Flex jc="flex-start" ai="flex-end">
+                  <select
+                    value={sortBy}
+                    onChange={e => this._didSelectSortOpt(e)}
+                    name="sort"
+                  >
+                    <option value="" style={{ display: 'none' }}>
+                      URUTKAN
+                    </option>
+                    <option value="created|desc">Terbaru</option>
+                    <option value="price|asc">Termurah</option>
+                    <option value="price|desc">Termahal</option>
+                  </select>
+                  <Button
+                    color="secondary"
+                    onClick={() => this._toggleShowModal()}
+                  >
+                    FILTER
+                  </Button>
+                </Flex>
+              </FilterOptions>
+              <FlatList
+                didReachThreshold={fallback => this.didScrollList(fallback)}
+              >
+                <div id="list">
+                  {products &&
+                    products.map((product, index) => (
+                      <ProductCard product={product} key={index} />
+                    ))}
+                </div>
+              </FlatList>
+              {loadMore && (
+                <LoadMoreIndicator>
+                  <Text>Loading...</Text>
+                </LoadMoreIndicator>
+              )}
+              {lastPage && (
+                <LoadMoreIndicator>
+                  <Text>End of list</Text>
+                </LoadMoreIndicator>
+              )}
+            </Card>
+          </Container>
+        )}
+        {isLoading && <LoadingIndicator />}
+        {showFilterModal && (
+          <FilterModal
+            willFilter={params => this.setFilters(params)}
+            willClose={() => this._toggleShowModal()}
+          />
+        )}
+      </Main>
+    )
+  }
 }
 
 const FilterOptions = styled('div')`
@@ -158,5 +228,11 @@ const LoadMoreIndicator = styled(Flex)`
   padding: 15px 0px;
   background: ${props => props.theme.color.grey};
 `
+
+Catalog.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string
+  })
+}
 
 export default Catalog

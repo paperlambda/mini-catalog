@@ -4,35 +4,31 @@ import sortSize from '@/helpers/sort-size'
 const getProducts = (params, query = null) => {
   const db = firebase.firestore()
   let products = db.collection('products')
+  const { colors, sizes, price, sort = 'created', order = 'desc' } = params
 
   // Sorts
-  const [sortBy, sortDirection = 'asc'] = params.sort
-  if (sortBy === 'price' || (params.filters && params.filters.price)) {
-    products = products.orderBy('price', sortDirection)
+  if (sort === 'price' || (params.filters && params.filters.price)) {
+    products = products.orderBy('price', order)
   }
-  if (sortBy !== 'price') {
-    products = products.orderBy(sortBy, sortDirection)
+  if (sort !== 'price') {
+    products = products.orderBy(sort, order)
   }
 
   // Filters
-  if (params.filters) {
-    const { colors, sizes, price } = params.filters
+  if (colors && colors.length > 0) {
+    colors.forEach(color => {
+      products = products.where(`colors.${color}`, '==', true)
+    })
+  }
 
-    if (colors && colors.length > 0) {
-      colors.forEach(color => {
-        products = products.where(`colors.${color}`, '==', true)
-      })
-    }
+  if (sizes && sizes.length > 0) {
+    sizes.forEach(size => {
+      products = products.where(`sizes.${size}`, '==', true)
+    })
+  }
 
-    if (sizes && sizes.length > 0) {
-      sizes.forEach(size => {
-        products = products.where(`sizes.${size}`, '==', true)
-      })
-    }
-
-    if (price) {
-      products = getPriceRangeQuery(products, price)
-    }
+  if (price) {
+    products = getPriceRangeQuery(products, price)
   }
 
   const current = query ? query : products.limit(2)
@@ -47,6 +43,7 @@ const getProducts = (params, query = null) => {
 
     const lastDoc = q.docs[q.docs.length - 1]
     const next = products.startAfter(lastDoc).limit(2)
+    console.log(next)
 
     return {
       data: q.docs.map(doc => {
