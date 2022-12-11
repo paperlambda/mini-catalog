@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "core-js": "^3.2.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "firebase": "^6.3.5",
     "history": "^4.9.0",
     "node-graceful": "^2.0.1",
